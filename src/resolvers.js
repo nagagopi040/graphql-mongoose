@@ -1,27 +1,23 @@
-const employeeList = [
-    {
-        _id: '1',
-        name: 'Naga',
-        age: '23'
-    },
-    {
-        _id: '2',
-        name: 'Gopi',
-        age: '25'
-    }
-]
+import Employee from './models/employee'
 
 export const resolvers = {
     Query: {
-        Employees() {
-            return employeeList;
+        async Employees() {
+            return await Employee.find();
+        },
+        async getEmployee(_,{ _id }){
+            return await Employee.findById(_id)
         }
     },
     Mutation: {
-        createEmployee(_,{ input }){
-            input._id= '0001'
-            employeeList.push(input);
-            return input
+        async createEmployee(_,{ input }){
+            return await Employee.create(input)
+        },
+        async updateEmployee(_,{ _id,input }){
+            return await Employee.findOneAndUpdate({ _id }, input,{ new: true })
+        },
+        async deleteEmployee(_,{ _id }){
+            return await Employee.findByIdAndRemove(_id)
         }
     }
 }

@@ -9,7 +9,7 @@ const typeDefs = `
     }
 
     type Query {
-        hello(msg: String!): String!
+        getEmployee(_id: ID!): Employee
         Employees: [Employee]
     }
 
@@ -19,6 +19,8 @@ const typeDefs = `
     }
 
     type Mutation {
+        updateEmployee(_id:ID!, input: EmployeeInput): Employee
+        deleteEmployee(_id:ID!): Employee
         createEmployee(input: EmployeeInput): Employee
     }
 `

@@ -1,11 +1,16 @@
 import express from 'express'
 import expressHTTP from 'express-graphql'
+import mongoose from 'mongoose'
+
 import schema from './schema'
 
 const app = express()
 const port = 3000
 
-app.use('/graphql', expressHTTP({
+mongoose.Promise = global.Promise
+mongoose.connect('mongodb://localhost:27017/test')
+
+app.use('/employee', expressHTTP({
     schema,
     context:{
         userId: 1
