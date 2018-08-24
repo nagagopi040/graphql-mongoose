@@ -4,12 +4,13 @@ import mongoose from 'mongoose'
 import logger from 'morgan'
 import cookieParser from 'cookie-parser'
 import bodyParser from 'body-parser'
+import userTypes from './graphql/types/userTypes'
+import expressGraphQL from 'express-graphql'
 
 const app = express()
 const port = 3000
 
 mongoose.Promise = global.Promise
-mongoose.connect('mongodb://localhost:27017/test')
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -39,9 +40,16 @@ app.use( (req, res, next) => {
     }
 });
 
-app.use('/employee', require('./routes/employeeRouter') );
-app.use('/user', require('./routes/userRouter'))
+app.use('/graphql',  expressGraphQL({
+    schema: userTypes,
+    graphiql: true
+}))
 
-app.listen(port, () => {
-    console.log(`Server is Running on localhost:${port}`)
-})
+mongoose.connect('mongodb://localhost:27017/test')
+    .then(res => {
+        app.listen(port, () => {
+            console.log(`Server is Running on localhost:${port}`)
+        })
+    }).catch( err => {
+        console.log(err.message)
+    })
