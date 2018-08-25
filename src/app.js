@@ -45,7 +45,7 @@ app.use('/graphql',  expressGraphQL({
     graphiql: true
 }))
 
-mongoose.connect('mongodb://localhost:27017/test')
+mongoose.connect('mongodb://localhost:27017/test',{ useNewUrlParser: true })
     .then(res => {
         app.listen(port, () => {
             console.log(`Server is Running on localhost:${port}`)

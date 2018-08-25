@@ -18,6 +18,49 @@ const UserType = new GraphQLObjectType({
     })
 })
 
+const mutation = new GraphQLObjectType({
+    name: "Mutation",
+    fields: {
+        createUser:{
+            type: UserType,
+            args: {
+                id: { type : new GraphQLNonNull(GraphQLString) },
+                firstName: { type : new GraphQLNonNull(GraphQLString) },
+                lastName: { type : new GraphQLNonNull(GraphQLString) },
+                username: { type : new GraphQLNonNull(GraphQLString) },
+                password: { type: new GraphQLNonNull(GraphQLString) },
+                email: { type : new GraphQLNonNull(GraphQLString) },
+                class: { type : new GraphQLNonNull(GraphQLString) },
+                role: { type : new GraphQLNonNull(GraphQLString) }
+            },
+            resolve(parentValue, args){
+                return User.create(args)
+            }
+        },
+        updateUser: {
+            type: UserType,
+            args: {
+                id: { type : new GraphQLNonNull(GraphQLString) },
+                input: {
+                    type : UserType,
+                }
+            },
+            resolve(parentValue, { id , input }){
+                return User.findOneAndUpdate({ id }, input,{ new: true })
+            }
+        },
+        deleteUser: {
+            type: UserType,
+            args: {
+                id: { type : new GraphQLNonNull(GraphQLString) },
+            },
+            resolve(parentValue, { id }){
+                return User.deleteOne({ id : id })
+            }
+        }
+    }
+})
+
 const UsersQuery = new GraphQLObjectType({
     name: 'UsersQueryType',
     fields: () => ({
@@ -26,23 +69,20 @@ const UsersQuery = new GraphQLObjectType({
             args: {
                 id: { type: GraphQLString }
             },
-            resolve(parentValue, args){
-                for(var i=0; i< users.length; i++ ){
-                    if(users[i].id = args.id){
-                        return users[i]
-                    }
-                }
+            resolve(parentValue, { id }){
+                return User.findOne({id:id})
             }
         },
         users: {
             type: new GraphQLList(UserType),
             resolve(parentValue, args){
-                return users;
+                return User.find();
             }
         }
     })
 })
 
 module.exports = new GraphQLSchema({
-    query: UsersQuery
+    query: UsersQuery,
+    mutation: mutation
 })

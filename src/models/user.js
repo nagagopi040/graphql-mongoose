@@ -3,10 +3,10 @@ import mongoose, { Schema } from 'mongoose'
 const UserSchema = new Schema({
     id:{
         type: String,
+        required: true
     },
     firstName:{
         type: String,
-        required: true
     },
     lastName:{
         type: String,
@@ -26,7 +26,11 @@ const UserSchema = new Schema({
     password:{
         type: String,
         required: true
-    }    
+    },
+    role: {
+        type: String,
+        required: true
+    }
 })
 
 export default mongoose.model('user', UserSchema)
