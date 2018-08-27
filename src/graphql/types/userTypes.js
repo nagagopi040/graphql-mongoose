@@ -41,12 +41,15 @@ const mutation = new GraphQLObjectType({
             type: UserType,
             args: {
                 id: { type : new GraphQLNonNull(GraphQLString) },
-                input: {
-                    type : UserType,
-                }
+                firstName: { type : GraphQLString },
+                lastName: { type : GraphQLString },
+                username: { type : GraphQLString },
+                email: { type : GraphQLString },
+                class: { type : GraphQLString },
+                role: { type : GraphQLString }
             },
-            resolve(parentValue, { id , input }){
-                return User.findOneAndUpdate({ id }, input,{ new: true })
+            resolve(parentValue, args){
+                return User.findOneAndUpdate({ id: args.id }, input,{ new: true })
             }
         },
         deleteUser: {
